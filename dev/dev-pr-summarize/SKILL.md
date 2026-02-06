@@ -1,5 +1,5 @@
 ---
-name: pr-summarize
+name: dev-pr-summarize
 description: Generate a concise PR changelog summary from the current branch diff.
 ---
 

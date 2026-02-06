@@ -1,5 +1,5 @@
 ---
-name: prek
+name: af-prek
 description: Run pre-commit checks using prek. Fuzzy matches check names.
 ---
 

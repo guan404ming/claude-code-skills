@@ -1,5 +1,5 @@
 ---
-name: review-airflow-ui
+name: af-review-ui
 description: Review Airflow UI code for consistency, best practices, and conventions.
 ---
 
