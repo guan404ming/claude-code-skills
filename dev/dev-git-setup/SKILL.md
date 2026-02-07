@@ -17,6 +17,8 @@ git config --global alias.sync '!f() { git fetch upstream && git checkout main &
 git config --global alias.pp 'push --force-with-lease'
 git config --global alias.r1 'reset HEAD~1'
 git config --global alias.ano 'commit -a --amend --no-edit'
+git config --global alias.temp 'commit -a -n -m "TEMP"'
+git config --global alias.a 'add .'
 ```
 
 ## Instructions
