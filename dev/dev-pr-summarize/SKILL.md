@@ -9,10 +9,11 @@ Generate a clear, minimal changelog for the current branch.
 
 ## Instructions
 
-1. Run `git log --oneline main..HEAD` to get commits on the branch
-2. Run `git diff main...HEAD --stat` to see changed files
-3. Run `git diff main...HEAD` to read the actual changes
-4. Produce a changelog using the template below
+1. Run `git log --oneline -10 main` to study the repo's commit message convention (e.g., `feat:`, `MSSQL:`, `[COMPONENT]`, plain imperative, etc.)
+2. Run `git log --oneline main..HEAD` to get commits on the branch
+3. Run `git diff main...HEAD --stat` to see changed files
+4. Run `git diff main...HEAD` to read the actual changes
+5. Produce a changelog using the template below, with the title matching the repo's convention
 
 ## Template
 
@@ -31,7 +32,7 @@ Generate a clear, minimal changelog for the current branch.
 
 ## Rules
 
-- Title must be short and imperative (e.g. "Add X", "Fix Y")
+- Title must follow the repo's commit message convention detected in step 1
 - "Why" is one sentence max
 - "How" bullets should be minimal and clear
 - No fluff, no over-explanation
