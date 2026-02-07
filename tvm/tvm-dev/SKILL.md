@@ -22,16 +22,7 @@ description: Resolve a TODO or fix an issue in the TVM relax folder.
 
 ### Common steps:
 
-2. **Create a branch** for the feature/fix.
+Follow `/dev-autodev` loop with these project-specific details:
 
-3. **Implement** — follow existing coding style, keep comments minimal.
-
-4. **Add tests** — parameterized, concise, in the right place following conventions.
-
-5. **If fixing an issue:** Re-run the repro script to verify it passes, then delete it.
-
-6. **Verify:** Use `/tvm-build` if C/C++ changed, then `/tvm-test`.
-
-7. **Commit** with `git commit -n -m "msg"` — no co-author tags.
-
-8. **PR summary:** Use `/dev-pr-summarize` to generate a changelog.
+- **If fixing an issue:** Re-run the repro script to verify it passes, then delete it.
+- **Verify:** Use `/tvm-build` if C/C++ changed, then `/tvm-test`.
