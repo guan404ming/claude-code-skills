@@ -30,4 +30,4 @@ description: Develop dialect features for datafusion-sqlparser-rs from the upstr
 
 4. **Update `target/NOTE.md`:** Mark completed items with `[x]`.
 
-5. **PR summary:** Use `/dev-pr-summarize` to generate a changelog for the changes.
+5. **PR summary:** Use `/dev-pr-summarize` to generate a changelog for the changes. PR title must include the dialect name prefix (e.g., `MSSQL: Add support for ...`).
