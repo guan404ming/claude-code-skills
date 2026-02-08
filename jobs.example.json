@@ -1,0 +1,30 @@
+{
+  "skills_repo": "guan404ming/claude-code-skills",
+  "email": {
+    "to": "guanmingchiu@gmail.com"
+  },
+  "jobs": [
+    {
+      "name": "df-dev",
+      "skill": "df-dev",
+      "path": "../datafusion-sqlparser-rs",
+      "prompt": "Pick one feature from the contribution list and implement it. Not need any plan, just implement the feature in new branch.",
+      "enabled": true,
+      "schedule": { "cron": "0 5 * * *", "times": 1 }
+    },
+    {
+      "name": "tvm",
+      "skill": "tvm-dev",
+      "path": "../tvm",
+      "enabled": true,
+      "schedule": { "cron": "0 6 * * *", "times": 1 }
+    },
+    {
+      "name": "tvm-ffi",
+      "skill": "tvm-ffi-dev",
+      "path": "../tvm-ffi",
+      "enabled": true,
+      "schedule": { "cron": "0 7 * * *", "times": 1 }
+    }
+  ]
+}
