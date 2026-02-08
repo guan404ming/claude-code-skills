@@ -1,5 +1,5 @@
 ---
-name: dev-review
+name: dev-pr-review
 description: Review code changes for consistency, best practices, and conventions.
 ---
 
@@ -7,8 +7,8 @@ description: Review code changes for consistency, best practices, and convention
 
 ## Usage
 ```
-/dev-review                    # local branch vs main
-/dev-review <PR_URL>           # checkout and review PR
+/dev-pr-review                    # local branch vs main
+/dev-pr-review <PR_URL>           # checkout and review PR
 ```
 
 ## Instructions

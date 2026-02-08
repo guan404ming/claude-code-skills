@@ -16,7 +16,7 @@ Python (qumat), Rust (qdp), uv, maturin, pytest
 
 ## Instructions
 
-1. **Get changed files:** Use `/dev-review` flow.
+1. **Get changed files:** Use `/dev-pr-review` flow.
 
 2. **Review checklist:**
    - Consistency with existing patterns in `qumat/` and `qdp/`
@@ -26,4 +26,4 @@ Python (qumat), Rust (qdp), uv, maturin, pytest
 
 3. **Run checks:** Use `/mahout-build`.
 
-4. **Verdict:** Follow `/dev-review` format.
+4. **Verdict:** Follow `/dev-pr-review` format.
