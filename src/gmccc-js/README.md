@@ -11,15 +11,3 @@ CLI to install Guan-Ming's Claude Code Skills.
 npx gmccc install
 npx gmccc uninstall
 ```
-
-## Scheduler
-
-```bash
-uv tool install gmccc
-gmccc --init       # Create ~/.config/gmccc/jobs.json
-gmccc --list       # List jobs
-gmccc -p <name>    # Run specific job
-gmccc --dry-run    # Simulate execution
-gmccc start        # Start scheduler daemon
-gmccc stop         # Stop scheduler
-```
