@@ -82,19 +82,13 @@ def cmd_status(config_path: Path | None):
 
 
 def cmd_logs(config_path: Path | None):
-    """List recent job logs."""
-    logs_dir = resolve_config_path(config_path).parent / "logs"
-    if not logs_dir.exists():
-        print("No logs found")
+    """Show scheduler daemon log."""
+    if not LOG_FILE.exists():
+        print("No log file found. Start scheduler first: gmccc start")
         return
 
-    logs = sorted(logs_dir.glob("*.log"), key=lambda f: f.stat().st_mtime, reverse=True)
-    if not logs:
-        print("No logs found")
-        return
-
-    for log in logs[:10]:
-        print(log)
+    print(f"Log: {LOG_FILE}\n")
+    print(LOG_FILE.read_text())
 
 
 def main():
