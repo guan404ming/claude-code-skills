@@ -15,8 +15,8 @@ DEFAULT_CONFIG_FILE = DEFAULT_CONFIG_DIR / "jobs.json"
 EXAMPLE_CONFIG = {
     "skills_repo": "guan404ming/claude-code-skills",
     "email": {
-        "to": "",
-        "smtp_user": "",
+        "to": "guanmingchiu@gmail.com",
+        "smtp_user": "xxx@gmail.com",
         "smtp_password": "",
         "smtp_host": "smtp.gmail.com",
         "smtp_port": 587,
@@ -107,7 +107,7 @@ def run_job(
     dry_run: bool = False,
 ):
     """Run a skill in the target path."""
-    if not config.enabled:
+    if not config.enabled and not dry_run:
         return
 
     target = Path(config.path)
