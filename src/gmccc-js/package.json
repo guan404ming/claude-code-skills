@@ -1,10 +1,10 @@
 {
   "name": "gmccc",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "CLI to install Guan-Ming's Claude Code Skills",
   "bin": {
     "gmccc": "./bin.js"
   },
-  "files": ["bin.js"],
+  "files": ["bin.js", "README.md"],
   "license": "MIT"
 }
