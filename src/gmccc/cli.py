@@ -43,7 +43,7 @@ def cmd_start(config_path: Path | None):
 
     PID_FILE.write_text(str(proc.pid))
     print(f"Scheduler started (PID: {proc.pid})")
-    print("Logs: gmccc logs")
+    print("Logs: gmccc info")
 
 
 def cmd_stop(config_path: Path | None):
@@ -60,7 +60,7 @@ def cmd_stop(config_path: Path | None):
 
 
 
-def cmd_list(config_path: Path | None):
+def cmd_info(config_path: Path | None):
     """Show scheduler status, jobs, and recent logs."""
     pid = _read_pid(PID_FILE)
     if pid:
@@ -84,12 +84,12 @@ def cmd_list(config_path: Path | None):
 
 def main():
     parser = argparse.ArgumentParser(description="gmccc - Claude workflow automation")
-    aliases = {"i": "install", "u": "uninstall", "r": "run", "c": "config", "l": "list", "t": "test"}
+    aliases = {"i": "install", "u": "uninstall", "r": "run", "c": "config", "t": "test"}
     parser.add_argument(
         "command",
         nargs="?",
-        choices=["install", "uninstall", "run", "config", "list", "test", "start", "stop"],
-        help="Commands (i = install, u = uninstall, r = run, c = config, l = list, t = test)",
+        choices=["install", "uninstall", "run", "config", "info", "test", "start", "stop"],
+        help="Commands (i = install, u = uninstall, r = run, c = config, t = test)",
     )
     parser.add_argument("name", nargs="?", help="Argument for run/config commands")
 
@@ -109,8 +109,8 @@ def main():
         uninstall()
         return
 
-    if args.command == "list":
-        cmd_list(config_path)
+    if args.command == "info":
+        cmd_info(config_path)
         return
 
     if args.command and args.command not in ("run", "test"):

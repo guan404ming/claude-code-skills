@@ -23,5 +23,5 @@ uv tool install gmccc      # PyPI (full CLI)
 | `gmccc config <path>` | `gmccc c <path>` | Create config at custom path |
 | `gmccc start` | | Start scheduler daemon |
 | `gmccc stop` | | Stop scheduler daemon |
-| `gmccc list` | `gmccc l` | Show status, jobs, and logs |
+| `gmccc info` | | Show status, jobs, and logs |
 | `gmccc test` | `gmccc t` | Simulate execution |
