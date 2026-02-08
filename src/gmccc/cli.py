@@ -7,15 +7,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-from gmccc.runner import get_config, init, resolve_config_path, run_job, setup
+from gmccc.runner import DEFAULT_CONFIG_DIR, get_config, init, resolve_config_path, run_job, setup
 
-
-def _pid_file(config_dir: Path) -> Path:
-    return config_dir / ".scheduler.pid"
-
-
-def _log_file(config_dir: Path) -> Path:
-    return config_dir / "scheduler.log"
+PID_FILE = DEFAULT_CONFIG_DIR / ".scheduler.pid"
+LOG_FILE = DEFAULT_CONFIG_DIR / "scheduler.log"
 
 
 def _read_pid(pid_file: Path) -> int | None:
@@ -32,47 +27,41 @@ def _read_pid(pid_file: Path) -> int | None:
 
 def cmd_start(config_path: Path | None):
     """Start scheduler daemon."""
-    config_dir = resolve_config_path(config_path).parent
-    pid_file = _pid_file(config_dir)
-    log_file = _log_file(config_dir)
-
-    if _read_pid(pid_file):
-        print(f"Scheduler already running (PID: {pid_file.read_text().strip()})")
+    if _read_pid(PID_FILE):
+        print(f"Scheduler already running (PID: {PID_FILE.read_text().strip()})")
         return
 
+    DEFAULT_CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, "-m", "gmccc.scheduler"]
     if config_path:
         cmd += ["-c", str(config_path)]
 
-    with open(log_file, "w") as lf:
+    with open(LOG_FILE, "w") as lf:
         proc = subprocess.Popen(
             cmd, stdout=lf, stderr=subprocess.STDOUT, start_new_session=True
         )
 
-    pid_file.write_text(str(proc.pid))
+    PID_FILE.write_text(str(proc.pid))
     print(f"Scheduler started (PID: {proc.pid})")
     print("Logs: gmccc logs")
 
 
 def cmd_stop(config_path: Path | None):
     """Stop scheduler daemon."""
-    config_dir = resolve_config_path(config_path).parent
-    pid_file = _pid_file(config_dir)
-    pid = _read_pid(pid_file)
+    pid = _read_pid(PID_FILE)
 
     if not pid:
         print("Scheduler not running")
         return
 
     os.kill(pid, signal.SIGTERM)
-    pid_file.unlink(missing_ok=True)
+    PID_FILE.unlink(missing_ok=True)
     print("Scheduler stopped")
 
 
 def cmd_status(config_path: Path | None):
     """Check scheduler status."""
-    config_dir = resolve_config_path(config_path).parent
-    pid = _read_pid(_pid_file(config_dir))
+    pid = _read_pid(PID_FILE)
 
     if pid:
         print(f"Scheduler running (PID: {pid})")
@@ -82,14 +71,11 @@ def cmd_status(config_path: Path | None):
 
 def cmd_logs(config_path: Path | None):
     """Tail scheduler logs."""
-    config_dir = resolve_config_path(config_path).parent
-    log_file = _log_file(config_dir)
-
-    if not log_file.exists():
+    if not LOG_FILE.exists():
         print("No log file found")
         return
 
-    subprocess.run(["tail", "-f", str(log_file)])
+    subprocess.run(["tail", "-f", str(LOG_FILE)])
 
 
 def main():
