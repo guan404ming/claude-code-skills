@@ -59,6 +59,11 @@ def cmd_stop(config_path: Path | None):
     print("Scheduler stopped")
 
 
+def cmd_restart(config_path: Path | None):
+    """Restart scheduler daemon."""
+    cmd_stop(config_path)
+    cmd_start(config_path)
+
 
 def cmd_info(config_path: Path | None):
     """Show scheduler status, jobs, and recent logs."""
@@ -88,7 +93,7 @@ def main():
     parser.add_argument(
         "command",
         nargs="?",
-        choices=["install", "uninstall", "run", "config", "info", "test", "start", "stop"],
+        choices=["install", "uninstall", "run", "config", "info", "test", "start", "stop", "restart"],
         help="Commands (i = install, u = uninstall, r = run, c = config, t = test)",
     )
     parser.add_argument("name", nargs="?", help="Argument for run/config commands")
@@ -118,6 +123,7 @@ def main():
             "install": lambda c: setup(c),
             "start": cmd_start,
             "stop": cmd_stop,
+            "restart": cmd_restart,
         }
         cmds[args.command](config_path)
         return
