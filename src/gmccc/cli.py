@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from gmccc.runner import DEFAULT_CONFIG_DIR, get_config, init, resolve_config_path, run_job, setup
+from gmccc.runner import DEFAULT_CONFIG_DIR, get_config, init, resolve_config_path, run_job, setup, uninstall
 
 PID_FILE = DEFAULT_CONFIG_DIR / ".scheduler.pid"
 LOG_FILE = DEFAULT_CONFIG_DIR / "scheduler.log"
@@ -93,12 +93,12 @@ def cmd_logs(config_path: Path | None):
 
 def main():
     parser = argparse.ArgumentParser(description="gmccc - Claude workflow automation")
-    aliases = {"i": "install", "r": "run", "c": "config", "l": "list", "t": "test"}
+    aliases = {"i": "install", "u": "uninstall", "r": "run", "c": "config", "l": "list", "t": "test"}
     parser.add_argument(
         "command",
         nargs="?",
-        choices=["install", "run", "config", "list", "test", "start", "stop", "status", "logs"],
-        help="Commands (i = install, r = run, c = config, l = list, t = test)",
+        choices=["install", "uninstall", "run", "config", "list", "test", "start", "stop", "status", "logs"],
+        help="Commands (i = install, u = uninstall, r = run, c = config, l = list, t = test)",
     )
     parser.add_argument("name", nargs="?", help="Argument for run/config commands")
 
@@ -112,6 +112,10 @@ def main():
 
     if args.command == "config":
         init(config_path)
+        return
+
+    if args.command == "uninstall":
+        uninstall()
         return
 
     if args.command and args.command not in ("run", "list", "test"):

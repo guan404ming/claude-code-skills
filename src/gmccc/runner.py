@@ -88,6 +88,24 @@ def setup(config_path: Path | None = None):
     print("Skills installed.")
 
 
+def uninstall():
+    """Remove skills and config."""
+    skills_dir = Path.home() / ".claude" / "skills"
+    if skills_dir.exists():
+        shutil.rmtree(skills_dir)
+        print(f"Removed {skills_dir}")
+    else:
+        print("No skills found")
+
+    if DEFAULT_CONFIG_DIR.exists():
+        shutil.rmtree(DEFAULT_CONFIG_DIR)
+        print(f"Removed {DEFAULT_CONFIG_DIR}")
+    else:
+        print("No config found")
+
+    print("Done.")
+
+
 def send_email(email: EmailConfig, subject: str, body: str):
     """Send email via Gmail SMTP."""
     msg = MIMEText(body)

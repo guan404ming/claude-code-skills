@@ -5,22 +5,19 @@
 
 Custom skills for Claude Code.
 
-## Install Skills with npx
+## Install
 
 ```bash
-npx gmccc install
-npx gmccc uninstall
+npx gmccc install          # npm (gmccc install/uninstall only)
+uv tool install gmccc      # PyPI (full CLI)
 ```
 
-## gmccc CLI
-
-```bash
-uv tool install gmccc
-```
+## Commands
 
 | Command | Alias | Description |
 |---|---|---|
 | `gmccc install` | `gmccc i` | Install skills via openskills |
+| `gmccc uninstall` | `gmccc u` | Remove skills and config |
 | `gmccc run <name>` | `gmccc r <name>` | Run a specific job |
 | `gmccc config` | `gmccc c` | Create default config file |
 | `gmccc config <path>` | `gmccc c <path>` | Create config at custom path |
