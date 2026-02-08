@@ -17,11 +17,18 @@ const commands = {
     });
     console.log("Done!");
   },
+  uninstall: () => {
+    console.log("Removing skills...");
+    execSync("rm -rf ~/.claude/skills/*", { stdio: "inherit" });
+    console.log("Removing global CLAUDE.md...");
+    execSync("rm -f ~/.claude/CLAUDE.md", { stdio: "inherit" });
+    console.log("Done!");
+  },
 };
 
 const cmd = process.argv[2];
 if (!cmd || !commands[cmd]) {
-  console.log("Usage: gmccc install");
+  console.log("Usage: gmccc <install|uninstall>");
   process.exit(1);
 }
 

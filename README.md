@@ -6,4 +6,5 @@ Custom skills for Claude Code.
 
 ```bash
 npx gmccc install
+npx gmccc uninstall
 ```
