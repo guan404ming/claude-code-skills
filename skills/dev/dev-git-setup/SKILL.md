@@ -28,6 +28,7 @@ Each line below is a gitconfig alias entry (key = value). Add them under `[alias
 - `atemp = commit -a -n -m "TEMP"`
 - `temp = commit -n -m "TEMP"`
 - `a = add .`
+- `rm = rebase main`
 - `no = commit --amend --no-edit`
 - sync (use double quotes to protect semicolons):
 
