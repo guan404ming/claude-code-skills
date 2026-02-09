@@ -11,4 +11,7 @@ Run if any `*.cc`, `*.h`, `*.cpp` files changed.
 ## Command
 ```bash
 make -C build -j8
+
+# or
+cd tvm/build && ninja -j8
 ```
