@@ -8,6 +8,7 @@ class ScheduleConfig(BaseModel):
 
     cron: str
     times: int = 1
+    timeout: int = 7200  # seconds, default 2 hours
 
 
 class JobConfig(BaseModel):

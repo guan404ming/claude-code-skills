@@ -4,6 +4,7 @@ import json
 import shutil
 import smtplib
 import subprocess
+import threading
 from datetime import datetime
 from email.mime.text import MIMEText
 from pathlib import Path
@@ -161,30 +162,52 @@ def run_job(
     logs_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_file = logs_dir / f"{config.name}_{timestamp}.log"
+    timeout = config.schedule.timeout
 
     print(f"Running {config.name} (/{config.skill})")
     print(f"Log: {log_file}")
 
-    with open(log_file, "w") as lf:
-        proc = subprocess.Popen(
-            cmd, cwd=target, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
-        )
-        for line in proc.stdout:
-            print(line, end="")
-            lf.write(line)
-            lf.flush()
-        proc.wait()
+    status = "completed"
+    try:
+        with open(log_file, "w") as lf:
+            proc = subprocess.Popen(
+                cmd, cwd=target, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
 
-    # Copy log to working directory
-    local_log = target / f"{config.name}.log"
-    shutil.copy2(log_file, local_log)
-    print(f"Done (exit {proc.returncode})")
+            def _stream():
+                for line in proc.stdout:
+                    print(line, end="")
+                    lf.write(line)
+                    lf.flush()
+
+            reader = threading.Thread(target=_stream, daemon=True)
+            reader.start()
+
+            try:
+                proc.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+                lf.write(f"\n[gmccc] Killed after {timeout}s timeout\n")
+                status = f"timeout ({timeout}s)"
+                print(f"Killed after {timeout}s timeout")
+
+            reader.join(timeout=5)
+
+        if status == "completed" and proc.returncode != 0:
+            status = f"failed (exit {proc.returncode})"
+
+        # Copy log to working directory
+        local_log = target / f"{config.name}.log"
+        shutil.copy2(log_file, local_log)
+        print(f"Done ({status})")
+
+    except Exception as e:
+        status = f"error: {e}"
+        print(f"Error: {e}")
 
     if email and email.smtp_user and email.smtp_password:
-        status = (
-            "completed" if proc.returncode == 0 else f"failed (exit {proc.returncode})"
-        )
-        log_content = log_file.read_text()
+        log_content = log_file.read_text() if log_file.exists() else "(no log)"
         send_email(
             email,
             subject=f"[gmccc] {config.name} {status}",
