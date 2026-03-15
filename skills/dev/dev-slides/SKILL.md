@@ -25,7 +25,7 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 
 ## Slide Structure
 1. Title slide (TITLE layout): 個人進度報告 + 電機所碩一 邱冠銘
-2. Paper info slide (TITLE_AND_BODY): paper title as slide title, body lists authors, affiliation, conference/year, arXiv ID
+2. Paper info slide (TITLE_AND_BODY): paper title as slide title, body lists authors, affiliation, conference/year, arXiv ID. Paper titles are often long and wrap to multiple lines, so always move body translateY down to ~1600000 EMU on this slide.
 3. Section: Intro
 4. Motivation & Problem (content slide)
 5. Paper Goal (content slide)
@@ -94,7 +94,8 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 
 8. **Verify layout** after building all slides:
    - Programmatically check every slide for overflow: compute each element's bounding box (size * scale + translate) and verify it stays within slide bounds (9144000 x 5143500 EMU)
-   - Verify title-to-image gap >= 228600 EMU (0.25")
+   - Verify title-to-image gap >= 228600 EMU (0.25") on figure/table slides
+   - Verify title-to-body gap on TITLE_AND_BODY slides: if title text is long (>50 chars), move body translateY down to avoid overlap
    - Verify image-to-caption gap ~150000 EMU, consistent across slides
    - Verify caption bottom < 5000000 EMU
    - Fix any violations in a single batchUpdate pass
