@@ -59,6 +59,7 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 
 4. **Build slides via batchUpdate:**
    - Delete the default empty slide first
+   - Create ALL slides listed in the Slide Structure section, do not skip any (especially the paper info slide)
    - Create all slides with `createSlide`, mapping placeholders by type
    - Object IDs must be at least 5 characters
    - Insert text with `insertText`
