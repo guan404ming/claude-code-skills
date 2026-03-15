@@ -25,19 +25,20 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 
 ## Slide Structure
 1. Title slide (TITLE layout): 個人進度報告 + 電機所碩一 邱冠銘
-2. Section: Intro
-3. Motivation & Problem (content slide)
-4. Paper Goal (content slide)
-5. Section: Design
-6. Method slides (2-4 slides depending on paper complexity)
-7. Figure slides (from paper, with captions)
-8. Section: Eval
-9. Experimental setup (content slide)
-10. Results (content slide)
-11. Table/figure slides (from paper, with captions)
-12. Section: Conclusion
-13. Limitations & Key Takeaways (content slide)
-14. Thanks slide
+2. Paper info slide (TITLE_AND_BODY): paper title as slide title, body lists authors, affiliation, conference/year, arXiv ID
+3. Section: Intro
+4. Motivation & Problem (content slide)
+5. Paper Goal (content slide)
+6. Section: Design
+7. Method slides (2-4 slides depending on paper complexity)
+8. Figure slides (from paper, with captions)
+9. Section: Eval
+10. Experimental setup (content slide)
+11. Results (content slide)
+12. Table/figure slides (from paper, with captions)
+13. Section: Conclusion
+14. Limitations & Key Takeaways (content slide)
+15. Thanks slide
 
 ## Instructions
 
@@ -94,6 +95,7 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
    ```
 
 ## Rules
+- If a slide title wraps to multiple lines, move the body placeholder down using `updatePageElementTransform` to avoid overlap (increase translateY)
 - Always use `batchUpdate` for efficiency, combine as many requests as possible
 - Keep bullet text short, one line per point
 - Use level 1 bullets for sub-items, not "- " prefixes
