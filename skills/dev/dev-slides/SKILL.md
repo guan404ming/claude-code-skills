@@ -69,9 +69,9 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 
 5. **Extract figures from PDF:**
    - Download PDF: `curl -sL "<url>" -o /tmp/paper.pdf`
-   - Use `pymupdf` to render specific page regions as images
-   - Crop tightly using `fitz.Rect` clip parameter, cut before caption text
-   - Auto-crop remaining whitespace with PIL + numpy
+   - Use `pymupdf` to analyze exact figure boundaries: call `page.get_text("dict")` for text blocks and `page.get_drawings()` for drawing bounds
+   - Define precise `fitz.Rect` clip regions based on analyzed coordinates, not rough guesses
+   - Auto-crop remaining whitespace with PIL + numpy (threshold gray < 248)
    - Target key figures: overview diagram, method diagram, result tables
 
 6. **Upload images** to a public host:
@@ -86,10 +86,19 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 7. **Insert images into slides** via batchUpdate:
    - Use TITLE_ONLY layout for figure slides
    - `createImage` with the hosted URL
-   - Position: centered, below title (~1100000 EMU from top)
+   - Position: centered horizontally, image top at ~1250000 EMU (0.25" below title bottom)
    - Add caption text box below image: 12pt, gray (#666), centered
+   - Caption top = image bottom + 150000 EMU gap
+   - Scale images to fit: max image bottom at ~4400000 EMU, keep aspect ratio
 
-8. **Verify** by outputting the presentation URL:
+8. **Verify layout** after building all slides:
+   - Programmatically check every slide for overflow: compute each element's bounding box (size * scale + translate) and verify it stays within slide bounds (9144000 x 5143500 EMU)
+   - Verify title-to-image gap >= 228600 EMU (0.25")
+   - Verify image-to-caption gap ~150000 EMU, consistent across slides
+   - Verify caption bottom < 5000000 EMU
+   - Fix any violations in a single batchUpdate pass
+
+9. **Output** the presentation URL:
    ```
    https://docs.google.com/presentation/d/<presentationId>/edit
    ```
@@ -102,3 +111,6 @@ description: Generate a Google Slides presentation from a paper PDF URL using gw
 - Crop figures tightly, no excess whitespace
 - Caption each figure/table with a one-line description
 - Do not override theme fonts or colors
+- Never let images overlap or sit too close to the title (min 0.25" gap)
+- Position captions relative to actual image bottom, not at fixed absolute Y
+- Always run a post-creation overflow check on all slides before finishing
