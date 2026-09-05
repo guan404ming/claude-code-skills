@@ -11,11 +11,16 @@ from pathlib import Path
 
 from gmccc.models import Config, EmailConfig, JobConfig
 
+DEFAULT_SKILLS_REPO = "guan404ming/gmccc"
 DEFAULT_CONFIG_DIR = Path.home() / ".config" / "gmccc"
 DEFAULT_CONFIG_FILE = DEFAULT_CONFIG_DIR / "jobs.json"
+SKILLS_DIRS = {
+    "claude": Path.home() / ".claude" / "skills",
+    "codex": Path.home() / ".agents" / "skills",
+}
 
 EXAMPLE_CONFIG = {
-    "skills_repo": "guan404ming/gmccc",
+    "skills_repo": DEFAULT_SKILLS_REPO,
     "email": {
         "to": "guanmingchiu@gmail.com",
         "smtp_user": "xxx@gmail.com",
@@ -82,21 +87,32 @@ def init(config_path: Path | None = None):
 
 def setup(config_path: Path | None = None):
     """Install skills globally via openskills."""
-    config = get_config(config_path)
-    cmd = ["npx", "openskills", "install", config.skills_repo, "--global", "-y"]
-    print(f"Installing skills from {config.skills_repo}...")
+    path = resolve_config_path(config_path)
+    repo = get_config(config_path).skills_repo if path.exists() else DEFAULT_SKILLS_REPO
+    cmd = ["npx", "--yes", "openskills", "install", repo, "--global", "-y"]
+    print(f"Installing skills from {repo}...")
     subprocess.run(cmd, check=True)
+    count = _install_repo_skills(
+        SKILLS_DIRS["claude"], SKILLS_DIRS["codex"], repo
+    )
+    print(f"Installed {count} Codex skills in {SKILLS_DIRS['codex']}")
     print("Skills installed.")
 
 
 def uninstall():
     """Remove skills and config."""
-    skills_dir = Path.home() / ".claude" / "skills"
-    if skills_dir.exists():
-        shutil.rmtree(skills_dir)
-        print(f"Removed {skills_dir}")
-    else:
-        print("No skills found")
+    repo = DEFAULT_SKILLS_REPO
+    if DEFAULT_CONFIG_FILE.exists():
+        repo = get_config().skills_repo
+
+    removed = 0
+    for agent, skills_dir in SKILLS_DIRS.items():
+        count = _remove_repo_skills(skills_dir, repo)
+        removed += count
+        print(f"Removed {count} {agent} skills from {skills_dir}")
+
+    if not removed:
+        print("No gmccc skills found")
 
     if DEFAULT_CONFIG_DIR.exists():
         shutil.rmtree(DEFAULT_CONFIG_DIR)
@@ -105,6 +121,59 @@ def uninstall():
         print("No config found")
 
     print("Done.")
+
+
+def _skill_source(skill_dir: Path) -> str | None:
+    metadata = skill_dir / ".openskills.json"
+    try:
+        return json.loads(metadata.read_text()).get("source")
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return None
+
+
+def _repo_skills(skills_dir: Path, repo: str) -> list[Path]:
+    if not skills_dir.exists():
+        return []
+    return sorted(
+        path
+        for path in skills_dir.iterdir()
+        if path.is_dir() and _skill_source(path) == repo
+    )
+
+
+def _remove_repo_skills(skills_dir: Path, repo: str) -> int:
+    skills = _repo_skills(skills_dir, repo)
+    for skill_dir in skills:
+        shutil.rmtree(skill_dir)
+    return len(skills)
+
+
+def _raise_skill_conflicts(
+    source_skills: list[Path], target_dir: Path, repo: str
+) -> None:
+    conflicts = [
+        target_dir / source.name
+        for source in source_skills
+        if (target_dir / source.name).exists()
+        and _skill_source(target_dir / source.name) != repo
+    ]
+    if conflicts:
+        names = ", ".join(path.name for path in conflicts)
+        raise FileExistsError(f"Skills already installed from another source: {names}")
+
+
+def _install_repo_skills(source_dir: Path, target_dir: Path, repo: str) -> int:
+    source_skills = _repo_skills(source_dir, repo)
+    if not source_skills:
+        raise RuntimeError(f"No skills found for {repo}")
+
+    _raise_skill_conflicts(source_skills, target_dir, repo)
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    _remove_repo_skills(target_dir, repo)
+    for source in source_skills:
+        shutil.copytree(source, target_dir / source.name)
+    return len(source_skills)
 
 
 def send_email(email: EmailConfig, subject: str, body: str):

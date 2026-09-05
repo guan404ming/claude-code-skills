@@ -1,7 +1,7 @@
 [project]
 name = "gmccc"
 version = "0.2.4"
-description = "Guan-Ming's Claude Code Skill CLI"
+description = "Guan-Ming's Claude Code and Codex Skill CLI"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
