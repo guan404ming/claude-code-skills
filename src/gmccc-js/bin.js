@@ -7,6 +7,10 @@ const path = require("path");
 
 const REPO = "guan404ming/gmccc";
 const CLAUDE_MD_URL = `https://raw.githubusercontent.com/${REPO}/main/CLAUDE.md`;
+const RULES_FILES = [
+  path.join(os.homedir(), ".claude", "CLAUDE.md"),
+  path.join(os.homedir(), ".codex", "AGENTS.md"),
+];
 const TARGETS = [
   {
     name: "Claude Code",
@@ -100,13 +104,11 @@ const commands = {
     console.log(
       `Installed ${skills.length} Codex skills in ${TARGETS[1].skillsDir}`,
     );
-    console.log("Installing global CLAUDE.md...");
-    execFileSync("curl", [
-      "-fsSL",
-      "-o",
-      path.join(os.homedir(), ".claude", "CLAUDE.md"),
-      CLAUDE_MD_URL,
-    ]);
+    console.log("Installing global rules...");
+    for (const rulesFile of RULES_FILES) {
+      fs.mkdirSync(path.dirname(rulesFile), { recursive: true });
+      execFileSync("curl", ["-fsSL", "-o", rulesFile, CLAUDE_MD_URL]);
+    }
     console.log("Done!");
   },
   uninstall: () => {
@@ -114,9 +116,9 @@ const commands = {
       const count = removeSkills(target.skillsDir);
       console.log(`Removed ${count} ${target.name} skills`);
     }
-    fs.rmSync(path.join(os.homedir(), ".claude", "CLAUDE.md"), {
-      force: true,
-    });
+    for (const rulesFile of RULES_FILES) {
+      fs.rmSync(rulesFile, { force: true });
+    }
     console.log("Done!");
   },
 };
