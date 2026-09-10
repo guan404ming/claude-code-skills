@@ -14,6 +14,7 @@
 - Keep responses concise and short.
 - Write agent-facing text in ASD-STE100 style: active voice, simple tenses, one instruction per short sentence, plainest word, no phrasal verbs, passive voice, or hedging.
 - For PR descriptions, use the dev-pr-summarize skill.
+- Shape every response with the i-have-adhd skill rules: next action first, numbered steps, one concrete next step, no preamble or closer.
 
 ## Before returning
 
