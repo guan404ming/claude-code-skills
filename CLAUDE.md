@@ -19,3 +19,9 @@
 ## Before returning
 
 - Run the dev-pr-check skill.
+
+## Code search
+
+- Search code with `tgrep -- <pattern> .` via Bash from the project root. Do not use the Grep tool.
+- Use `-F` for literal strings. Use `-t` or `-g` to scope. Use `--no-index` when file freshness matters.
+- Exit code 1 means no match, not an error.
