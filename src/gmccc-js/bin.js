@@ -166,7 +166,11 @@ const installTgrep = () => {
   try {
     execFileSync("tgrep", ["--version"], { stdio: "ignore" });
   } catch {
-    console.warn("tgrep not found. Install it: brew install tgrep");
+    try {
+      execFileSync("brew", ["install", "tgrep"], { stdio: "inherit" });
+    } catch {
+      console.warn("tgrep not found. Install it: https://github.com/microsoft/tgrep");
+    }
   }
 };
 

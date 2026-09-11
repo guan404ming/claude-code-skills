@@ -1,4 +1,5 @@
 #!/bin/bash
+command -v tgrep >/dev/null || exit 0
 input=$(cat)
 pattern=$(printf '%s' "$input" | jq -r '.tool_input.pattern // ""')
 glob=$(printf '%s' "$input" | jq -r '.tool_input.glob // ""')
